@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>ADMIN : <%= event.eventName %></title>
+  <!-- MDB icon -->
+  <link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+  <!-- Bootstrap core CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Material Design Bootstrap -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.12.0/css/mdb.min.css" rel="stylesheet">
+  <!-- Your custom styles (optional) -->
+  <link rel="stylesheet" href="css/style.css" type="text/css">
+</head>
+<body>
+    <div class="container">
+  <div class="col-md-12 mt-5">
+      <h1><%= event.eventName %></h1>
+</div>
+<div class="col-md-12 mt-3 bg-dark pb-2">
+    <h2 class="text-secondary pt-4 mt-4">what's it about ?</h2>
+    <div class="container bg-secondary">
+        <p class="text-light p-4"><%= event.description %></p>
+    </div>
+</div>
+<div class="col-md-12 bg-secondary p-3">
+<div class="col-md-6 bg-secondary float-left">
+    <h5 class="text-dark p-3">Booking start time : <%= event.bookStartTime %></h5>
+</div>
+<div class="col-md-6 bg-secondary offset-5">
+    <h5 class="text-dark p-3">Booking end time : <%= event.bookEndTime %></h5 >
+</div>
+</div>
+<div class="col-md-12  bg-dark p-1">
+<div class="col-md-3 bg-dark float-left mt-3">
+    <h5 class="text-warning p-3">Ticket price : <%= event.ticketPrice %></h5 >
+</div>
+<div class="col-md-3 float-right pt-4">
+    <form action="/removeEvent?eventName=<%= event.eventName %>" method="POST">
+    <button class="btn btn-primary pl-5 pr-5" type="submit">DELETE</button>
+    </form>
+</div>
+<div class="col-md-3 offset-5">
+    <h5 class="text-light p-2">Total tickets : <%= event.totalTickets %></h5>
+    <h5 class="text-light p-2"><%= event.availableTickets %> tickets left!!! </h5 >
+</div>
+
+</div>
+</div>
+</body>
+</html>
