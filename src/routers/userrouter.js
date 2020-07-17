@@ -5,10 +5,12 @@ const {Comment} = require('../models/user');
 const express = require('express');
 const router = new express.Router();
 
+//To login as admin or user or register an user
 router.post('/login', async (req, res) => {
   try {
     let user = await User.findOne({ name: req.body.name });
 
+    //if user name is present check the password
     if (user) {
       if (user.password !== req.body.password) {
       	return res.status(400).send("Invalid Password");
@@ -23,6 +25,7 @@ router.post('/login', async (req, res) => {
       return res.redirect('/userViewEvents');
     }
 
+    //for a new user name register the user
     user = new User(req.body);
     
     await user.save();
@@ -34,6 +37,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
+//To logout from the session
 router.get('/logout', function(req, res) {
   let user = req.session.user.name;
   req.session.destroy(function(err){  
@@ -47,7 +51,7 @@ router.get('/logout', function(req, res) {
     }  
   });
 });
-
+//To redirect if already logged in
 router.get('/', (req, res) => {
   if(req.session.user){  
     console.log(req.session.user); 
@@ -69,10 +73,13 @@ router.get('/page', (req, res) => {
   return res.redirect('login.html');
 });
 
+//To view the list of events
 router.get('/userViewEvents', async (req, res) => {
 	try {
     const dateTimeNow = new Date();
     console.log(dateTimeNow)
+
+    //search for the events with bookings still open
     const events = await Event.find({
       bookStartTime: { $lte : dateTimeNow},
       bookEndTime: { $gte : dateTimeNow},
@@ -85,12 +92,15 @@ router.get('/userViewEvents', async (req, res) => {
 	}
 });
 
+//To get the details of each event
 router.get('/userEventDetails', async (req, res) => {
 	try {
     const event = await Event.findOne({eventName : req.query.eventName});
     if (!event) {
       return res.status(404).send("Event not found");
     }
+
+    //to check if the user has liked the event
     const user = req.session.user.name;
     let likeEvent = await Like.findOne({
         eventName : req.query.eventName,
@@ -101,11 +111,14 @@ router.get('/userEventDetails', async (req, res) => {
     if (likeEvent) {
       isLiked = likeEvent.liked;
     }
+
+    //count the total no. of likes for the event
     const totalLikes = await Like.countDocuments({
       eventName : req.query.eventName,
       liked : TRUE
     });
 
+    //retrieve all the comments with user name for the event
     const comments = await Comment.find({
       eventName : req.query.eventName
     });
@@ -117,6 +130,7 @@ router.get('/userEventDetails', async (req, res) => {
 	}
 });
 
+//To book the tickets by the number
 router.post('/buyTickets', async (req, res) => {
   try {
     const event = await Event.findOne({
@@ -130,6 +144,8 @@ router.post('/buyTickets', async (req, res) => {
       return res.redirect('/userEventDetails?eventName=' + req.query.eventName);
     }
     else{
+
+      //update the number of available tickets for the event after booking
       let remTickets = event.availableTickets - req.body.numTickets;
       const eventone = await Event.findOneAndUpdate({
         eventName : req.query.eventName,
@@ -147,6 +163,7 @@ router.post('/buyTickets', async (req, res) => {
   }
 });
 
+//To update the like status for an event
 router.post('/like', async (req, res) => {
   try {
     const user = req.session.user.name;
@@ -174,6 +191,7 @@ router.post('/like', async (req, res) => {
   }
 });
 
+//To add the user comment for an event
 router.post('/comment', async (req, res) => {
   try {
     const user = req.session.user.name;

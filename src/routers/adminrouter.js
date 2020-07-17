@@ -5,6 +5,7 @@ const router = new express.Router();
 
 router.post('/addEvent', async (req, res) => {
   try {
+    //search fo the event by name and status as active
     let event = await Event.findOne({ 
 			eventName: req.body.eventName,
 			status: EVENT_ACTIVE
@@ -18,6 +19,7 @@ router.post('/addEvent', async (req, res) => {
     if(event === undefined) {
       return res.status(400).send("Event details required");
     }
+    //initialise no. of available tickets by the total no. of tickets
     event.availableTickets = event.totalTickets;
     await event.save();
     res.status(201).send(event.eventName+" added");
@@ -27,7 +29,7 @@ router.post('/addEvent', async (req, res) => {
     res.status(400).send(e);
   }
 });
-
+//To view the list of events
 router.get('/adminViewEvents', async (req, res) => {
 	try {
     const events = await Event.find({});
@@ -38,6 +40,7 @@ router.get('/adminViewEvents', async (req, res) => {
 	}
 });
 
+//To view the details of an event
 router.get('/adminEventDetails', async (req, res) => {
 	try {
     const event = await Event.findOne({eventName : req.query.eventName});
@@ -51,10 +54,7 @@ router.get('/adminEventDetails', async (req, res) => {
 	}
 });
 
-router.get('/engine', function(req, res) {
-  res.render('pages/index');
-});
-
+//To update the status of an event as inactive
 router.post('/removeEvent', async (req, res) => {
   try {
     const event = await Event.findOneAndUpdate({
