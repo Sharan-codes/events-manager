@@ -1,9 +1,9 @@
 var bodyParser = require('body-parser');
 const express = require('express');
 var session = require('express-session');
-require('./db/mongoose');
-const userRouter = require('./routers/userrouter');
-const adminRouter = require('./routers/adminrouter');
+require('./src/db/mongoose');
+const userRouter = require('./src/routers/userrouter');
+const adminRouter = require('./src/routers/adminrouter');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -20,7 +20,7 @@ app.use(session({
 }));
 app.use(userRouter);
 app.use(adminRouter);
-app.set('views', __dirname+'\\views');
+app.set('views', __dirname+'\\src\\views');
 
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');
