@@ -2,8 +2,8 @@ var bodyParser = require('body-parser');
 const express = require('express');
 var session = require('express-session');
 require('./src/db/mongoose');
-const userRouter = require('./src/routers/userrouter');
-const adminRouter = require('./src/routers/adminrouter');
+const userRouter = require('./src/routers/userRouter');
+const adminRouter = require('./src/routers/adminRouter');
 
 const app = express();
 const port = process.env.PORT || 3000;
