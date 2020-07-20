@@ -1,7 +1,7 @@
 const Event = require('../models/event');
 const {User} = require('../models/user');
-const {Like} = require('../models/user');
-const {Comment} = require('../models/user');
+const {Like} = require('../models/like');
+const {Comment} = require('../models/comment');
 const express = require('express');
 const router = new express.Router();
 
