@@ -57,7 +57,7 @@ router.get('/', (req, res) => {
     console.log(req.session.user); 
 
     if (req.session.user.name === "admin") {
-      return res.redirect('addevent.html');
+      return res.redirect('addEvent.html');
     } 
 
     return res.redirect('/userViewEvents');
