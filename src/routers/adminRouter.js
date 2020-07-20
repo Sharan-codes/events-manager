@@ -59,8 +59,8 @@ router.post('/removeEvent', async (req, res) => {
   try {
     const event = await Event.findOneAndUpdate({
       eventName : req.query.eventName,
-       status : 1
-    }, { status: 0 });
+       status : EVENT_ACTIVE
+    }, { status: EVENT_INACTIVE });
     if (!event) {
       res.redirect('/adminViewEvents');
       console.log("Event not found");

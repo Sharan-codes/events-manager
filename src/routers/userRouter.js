@@ -83,7 +83,7 @@ router.get('/userViewEvents', async (req, res) => {
     const events = await Event.find({
       bookStartTime: { $lte : dateTimeNow},
       bookEndTime: { $gte : dateTimeNow},
-      status: 1
+      status: EVENT_ACTIVE
     });
     res.render('pages/userViewEvents', { title: 'Events', records: events, user: req.session.user.name });
 		// res.send(events);
@@ -135,7 +135,7 @@ router.post('/buyTickets', async (req, res) => {
   try {
     const event = await Event.findOne({
       eventName : req.query.eventName,
-      status : 1
+      status : EVENT_ACTIVE
     });
     if (!event) {
       return res.status(404).send("Event not found");
@@ -149,7 +149,7 @@ router.post('/buyTickets', async (req, res) => {
       let remTickets = event.availableTickets - req.body.numTickets;
       const eventone = await Event.findOneAndUpdate({
         eventName : req.query.eventName,
-        status : 1
+        status : EVENT_ACTIVE
       }, { availableTickets: remTickets});
 
       if (!eventone) {
