@@ -54,7 +54,7 @@ router.get('/adminEventDetails', async (req, res) => {
 	}
 });
 
-//To update the status of an event as inactive
+//To update the status of an event as INACTIVE
 router.post('/removeEvent', async (req, res) => {
   try {
     const event = await Event.findOneAndUpdate({
