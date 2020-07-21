@@ -13,24 +13,45 @@ router.post('/login', async (req, res) => {
     //if user name is present check the password
     if (user) {
       if (user.password !== req.body.password) {
-      	return res.status(400).send("Invalid Password");
+      	return res.status(400).send("invalid password");
       }
       req.session.user = user;
       console.log(req.session.user);
       
       if (user.name === "admin") {
-        return res.redirect('addEvent.html');
+        return res.status(200).send({ redirect: 'addEvent.html' });
+        // return res.redirect('addEvent.html');
       } 
-      
-      return res.redirect('/userViewEvents');
+      else {
+        return res.status(200).send({ redirect: '/userViewEvents' });
+        //return res.redirect('/userViewEvents');
+      }
+    } 
+    else {
+      return res.status(400).send("user not found");
     }
+  }
+  catch (e) {
+    res.status(400).send(e);
+  }
+});
 
-    //for a new user name register the user
+router.post('/register', async (req, res) => {
+  try {
+    let user = await User.findOne({ name: req.body.name });
+
+    //if user name is present don't register
+    if (user) {
+        console.log("changename");
+      	return res.status(400).send("changename");
+      }
+
+    //for a new user name, register the user
     user = new User(req.body);
     
     await user.save();
-    // res.status(201).send(user.name+" registered");
-    return res.redirect('register_success.html'); 
+    return res.status(201).send(user.name+" registered");
+    //return res.redirect('register_success.html'); 
   }
   catch (e) {
     res.status(400).send(e);
@@ -183,9 +204,10 @@ router.post('/like', async (req, res) => {
     await likeEvent.save(); 
   }
   // res.status(201).send(user.name+" registered");
-  console.log(likeEvent);
-  return res.redirect('/userEventDetails?eventName=' + req.body.eventName); 
-  }
+  //console.log(likeEvent);
+  res.send("Liked");
+ // res.redirect('/userEventDetails?eventName=' + req.body.eventName); 
+}
   catch (e) {
     res.status(400).send(e);
   }
