@@ -1,7 +1,7 @@
 <!DOCTYPE html> 
 <html> 
 <head> 
-	<title> Signup Form</title> 
+	<title>Login</title> 
 		
 		
 <link rel="stylesheet"
@@ -14,20 +14,19 @@ crossorigin="anonymous">
 <link rel="stylesheet" type="text/css" href="css/style.css"> 
 		
 </head> 
-<body> 
+<body style="background-color:black;"> 
 	
 	<br> 
 	<br> 
 	<br> 
 	<div class="container" > 
-		<div class="row"> 
+		<div class="row""> 
 		<div class="col-md-3"> 
 					
 		</div> 
 				
-		<div class="col-md-6 main"> 
+		<div class="col-md-6 main" > 
 					
-			<form action="/login" method="post"> 
 					
 			<h1> Login </h1> 
 							
@@ -37,18 +36,43 @@ crossorigin="anonymous">
 			<input class="box" type="password" name="password"
 			id="password" placeholder="Password " required/><br>
 						<br> 
-			<input type="submit" id="submitDetails"
-			name="submitDetails" value="Submit" /><br> 
+			<div class="row">			
+			<input style="margin-left: 8%; width:40%;" type="submit" id="submitDetails"
+			name="submitDetails" value="Submit" /> 
+			<a href="register.html"><input class="reg" id="register" type="button"
+			name="register" value="Register" /></a>
+			</div>	
 					
-			</form> 
-					
-		</div> 
-				
-				
-		<div class="col-md-3"> 
 		</div> 
 				
 	</div> 
 	</div> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script> 
+    $('#submitDetails').click(function(event) {
+    
+        $.ajax({
+            global: false,
+            type: 'POST',
+            url: '/login',
+            data: {
+                name: $("#name").val(),
+                password: $("#password").val(),
+            },
+            success: function (result) {
+				window.location.href = result.redirect;
+                console.log(result);
+            },
+            error: function (request, status, error) {
+               if(request.responseText === "invalid password") {
+                    alert("Invalid password");
+				}
+				else if(request.responseText === "user not found") {
+                    alert("User doesn't exist");
+				}
+            }
+        });
+    });
+</script>
 </body> 
 </html>	 
