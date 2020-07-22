@@ -33,16 +33,18 @@
                 <div class="card-heading"></div>
                 <div class="card-body">
                     <h2 class="title">Register</h2>
+                    <form>
                         <div class="input-group">
-                            <input class="input--style-3" type="text" placeholder="Name" name="name" id="name">
+                            <input class="input--style-3" type="text" placeholder="Name" name="name" id="name" required>
                         </div>
                         <div class="input-group">
-                            <input class="input--style-3" type="password" placeholder="Password" name="password" id="password">
+                            <input class="input--style-3" type="password" placeholder="Password" name="password" id="password" pattern=".{7,}" title="Password must be 7 characters or more" minlength="7" required>
                         </div>
                         <div class="p-t-10">
-                            <button id="registerbtn" class="btn btn--pill btn--green" type="button">SUBMIT</button>
+                            <button id="registerbtn" class="btn btn--pill btn--green" type="submit">SUBMIT</button>
                             <a href="/"><button class="btn btn--pill btn--green" style="margin-left:3%;" type="button">LOGIN</button></a>
                         </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -60,25 +62,28 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script> 
     $('#registerbtn').click(function(event) {
-    
-        $.ajax({
-            global: false,
-            type: 'POST',
-            url: '/register',
-            data: {
-                name: $("#name").val(),
-                password: $("#password").val(),
-            },
-            success: function (result) {
-                window.location= "/register_success.html";
-                console.log(result);
-            },
-            error: function (request, status, error) {
-               if(request.responseText === "changename") {
-                    alert("Username already exists. Enter another name.");
+        if(($("#name").val() !== '') && ( $("#password").val().length >= 7))
+        {
+            event.preventDefault();
+            $.ajax({
+                global: false,
+                type: 'POST',
+                url: '/register',
+                data: {
+                    name: $("#name").val(),
+                    password: $("#password").val(),
+                },
+                success: function (result) {
+                    window.location= "/register_success.html";
+                    console.log(result);
+                },
+                error: function (request, status, error) {
+                if(request.responseText === "changename") {
+                        alert("Username already exists. Enter another name.");
+                    }
                 }
-            }
-        });
+            });
+        }
     });
 </script>
 </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
