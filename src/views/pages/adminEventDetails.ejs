@@ -17,8 +17,92 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.12.0/css/mdb.min.css" rel="stylesheet">
   <!-- Your custom styles (optional) -->
   <link rel="stylesheet" href="css/style.css" type="text/css">
+  <style>
+    body {font-family: Arial, Helvetica, sans-serif;}
+    * {box-sizing: border-box;}
+    
+    /* Button used to open the contact form - fixed at the bottom of the page */
+    .open-button {
+      background-color: #555;
+      color: white;
+      padding: 16px 20px;
+      border: none;
+      cursor: pointer;
+      opacity: 0.8;
+      bottom: 8%;
+      right: 9%;
+      width: 280px;
+    }
+    
+    /* The popup form - hidden by default */
+    .form-popup {
+      display: none;
+      position: fixed;
+      bottom: 17%;
+      right: 10%;
+      border: 3px solid #f1f1f1;
+      z-index: 9;
+    }
+    
+    /* Add styles to the form container */
+    .form-container {
+      max-width: 300px;
+      padding: 10px;
+      background-color: white;
+    }
+    
+    /* Full-width input fields */
+    .form-container input[type=text], .form-container input[type=password] {
+      width: 100%;
+      padding: 15px;
+      margin: 5px 0 22px 0;
+      border: none;
+      background: #f1f1f1;
+    }
+    
+    /* When the inputs get focus, do something */
+    .form-container input[type=text]:focus, .form-container input[type=password]:focus {
+      background-color: #ddd;
+      outline: none;
+    }
+    
+    /* Set a style for the submit/login button */
+    .form-container .btn {
+      background-color: #4CAF50;
+      color: white;
+      padding: 16px 20px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom:10px;
+      opacity: 0.8;
+    }
+    
+    /* Add a red background color to the cancel button */
+    .form-container .cancel {
+      background-color: red;
+    }
+    
+    /* Add some hover effects to buttons */
+    .form-container .btn:hover, .open-button:hover {
+      opacity: 1;
+    }
+
+    .like:hover {color: gold;}
+
+    .input--style-5 {
+      background: #e5e5e5;
+      line-height: 30px;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border-radius: 5px;
+      padding: 0 22px;
+      font-size: 16px;
+      color: #555;
+    }
+    </style>
 </head>
-<body>
+<body onload="loadLike()" >
     <div class="container">
   <div class="col-md-12 mt-5">
       <h1><%= event.eventName %></h1>
@@ -52,14 +136,53 @@
 </div>
 
 </div>
+<div class="col-md-12  bg-dark mt-1 pb-5 text-light">
+    <div class="col-md-3">
+      <h3 class="float-left mt-2">Like</h3>
+    </div>
+  
+  <i class="fa like fa-thumbs-up fa-2x ml-5 float-left mt-2" id="likes"></i>
+  <h3 class="float-left ml-2 text-warning mt-2" id="likesNum">N</h3>
+</div>
+<div class="col-md-12 mt-3">
+    <div class="input-group">
+      <h3 class="mt-2 ml-1">COMMENT</h3>
+    </div>
+  </div>
+  
+<table id="dtVerticalScrollExample" class="table table-striped table-bordered mt-5" cellspacing="0" width="100%">
+<thead>
+    <tr>
+      <th colspan="2">COMMENTS</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%if (records.length >0){ %>
+    <% records.forEach(function(row){ %>
+    <tr>
+      <td class="h4"><%= row.userName %></td>
+      <td><%= row.comment %></td>
+    </tr>
+    <% })}else{ %>
+      <tr>
+      <td colspan="2">No comments</td>   
+        </tr>
+      <% } %>
+  </tbody>
+</table>
 </div>
 <script>
- function checkDeletion() {
+    function checkDeletion() {
       if(<%= event.status %>){
           alert("Event <%= event.eventName %> deleted");
       } else {
         alert("Event <%= event.eventName %> already deleted");
       }  
+    }
+    function loadLike() {
+      var x = document.getElementById("likes");
+      var y = document.getElementById("likesNum");
+      y.innerHTML = <%= totalLikes %>;
     }
 </script>
 </body>

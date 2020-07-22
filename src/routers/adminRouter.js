@@ -1,5 +1,7 @@
 const Event = require('../models/event');
 require('../constants');
+const {Like} = require('../models/like');
+const {Comment} = require('../models/comment');
 const express = require('express');
 const router = new express.Router();
 
@@ -47,7 +49,19 @@ router.get('/adminEventDetails', async (req, res) => {
     if (!event) {
       return res.status(404).send("Event not found");
     }
-    res.render('pages/adminEventDetails', { title: 'Event details', event : event });
+
+    //count the total no. of likes for the event
+    const totalLikes = await Like.countDocuments({
+      eventName : req.query.eventName,
+      liked : TRUE
+    });
+
+    //retrieve all the comments with user name for the event
+    const comments = await Comment.find({
+      eventName : req.query.eventName
+    });
+    
+    res.render('pages/adminEventDetails', { title: 'Event details', event : event, totalLikes : totalLikes, records: comments });
 		// res.send(events);
 	} catch (e) {
 		res.status(500).send();
