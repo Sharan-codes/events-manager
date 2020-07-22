@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 
 const User = mongoose.model('User', {
+    type: {
+        type: Number,
+        default: USER,
+        trim: true
+    },
     name: {
         type: String,
         trim: true
