@@ -18,7 +18,7 @@ router.post('/login', async (req, res) => {
       req.session.user = user;
       console.log(req.session.user);
       
-      if (user.name === "admin") {
+      if (user.type === ADMIN) {
         return res.status(200).send({ redirect: 'addEvent.html' });
         // return res.redirect('addEvent.html');
       } 
@@ -47,7 +47,11 @@ router.post('/register', async (req, res) => {
       }
 
     //for a new user name, register the user
-    user = new User(req.body);
+    user = new User({
+      type: USER,
+      name: req.body.name,
+      password: req.body.password
+    });
     
     await user.save();
     return res.status(201).send(user.name+" registered");
