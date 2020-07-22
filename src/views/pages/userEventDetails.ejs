@@ -163,8 +163,7 @@
 <div class="col-md-12 mt-3">
   <div class="input-group">
     <h3 class="mt-2 ml-1">COMMENT</h3>
-      <textarea rows = "2" cols = "90" class="input--style-5 ml-2" type="text" id="comment">
-          </textarea>
+      <textarea rows = "2" cols = "90" class="input--style-5 ml-2" type="text" id="comment" required></textarea>
       <button class="btn btn-dark ml-4" id="commentbtn">></button>
   </div>
 </div>
@@ -260,23 +259,29 @@
 });
 
 $('#commentbtn').click(function() {
-      var comment = document.getElementById("comment").value;
-    $.ajax({
-        global: false,
-        type: 'POST',
-        url: '/comment',
-        data: {
-          eventName: "<%= event.eventName %>",
-          comment: comment
-        },
-        success: function (result) {
-            alert("Comment submitted");
-            console.log(result);
-        },
-        error: function (request, status, error) {
-            serviceError();
-        }
-    });
+    var comment = document.getElementById("comment").value;
+    if(comment === '') {
+      alert("Type a comment.");
+    }
+    else {
+    
+      $.ajax({
+          global: false,
+          type: 'POST',
+          url: '/comment',
+          data: {
+            eventName: "<%= event.eventName %>",
+            comment: comment
+          },
+          success: function (result) {
+              alert("Comment submitted");
+              console.log(result);
+          },
+          error: function (request, status, error) {
+              serviceError();
+          }
+      });
+    }
 });
     </script>
 </body>
