@@ -7,6 +7,7 @@ const router = new express.Router();
 
 router.post('/addEvent', async (req, res) => {
   try {
+    /*
     //search fo the event by name and status as active
     let event = await Event.findOne({ 
 			eventName: req.body.eventName,
@@ -16,11 +17,19 @@ router.post('/addEvent', async (req, res) => {
     if (event) {
       return res.status(400).send("Event exists");
     }
+    */
 
-    event = new Event(req.body);
+    //count of total no. of events
+    const idCount = await Event.countDocuments({});
+    
+    let event = new Event(req.body);
     if(event === undefined) {
       return res.status(400).send("Event details required");
     }
+
+    //initialise eventId
+    event.eventId = idCount + 1,
+
     //initialise no. of available tickets by the total no. of tickets
     event.availableTickets = event.totalTickets;
     await event.save();
@@ -45,19 +54,21 @@ router.get('/adminViewEvents', async (req, res) => {
 //To view the details of an event
 router.get('/adminEventDetails', async (req, res) => {
 	try {
-    const event = await Event.findOne({eventName : req.query.eventName});
+    const event = await Event.findOne({eventId : req.query.eventId, eventName : req.query.eventName});
     if (!event) {
       return res.status(404).send("Event not found");
     }
 
     //count the total no. of likes for the event
     const totalLikes = await Like.countDocuments({
+      eventId : req.query.eventId,
       eventName : req.query.eventName,
       liked : TRUE
     });
 
     //retrieve all the comments with user name for the event
     const comments = await Comment.find({
+      eventId : req.query.eventId,
       eventName : req.query.eventName
     });
     
@@ -72,6 +83,7 @@ router.get('/adminEventDetails', async (req, res) => {
 router.post('/removeEvent', async (req, res) => {
   try {
     const event = await Event.findOneAndUpdate({
+      eventId : req.query.eventId,
       eventName : req.query.eventName,
        status : EVENT_ACTIVE
     }, { status: EVENT_INACTIVE });

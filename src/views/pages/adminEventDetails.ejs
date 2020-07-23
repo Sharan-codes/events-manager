@@ -131,7 +131,7 @@
       <h5 class="text-warning p-3">Ticket price : <%= event.ticketPrice %></h5 >
   </div>
   <div class="col-md-3 float-right pt-4">
-      <form action="/removeEvent?eventName=<%= event.eventName %>" method="POST">
+      <form action="/removeEvent?eventId=<%= event.eventId %>&eventName=<%= event.eventName %>" method="POST">
       <button onclick="checkDeletion()" class="btn btn-primary pl-5 pr-5" type="submit">DELETE</button>
       </form>
   </div>

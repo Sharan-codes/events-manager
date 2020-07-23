@@ -150,7 +150,7 @@
 </div>
 
 <div class="form-popup" id="buyForm">
-    <form action="/buyTickets?eventName=<%= event.eventName %>" method="POST" class="form-container">
+    <form action="/buyTickets?eventId=<%= event.eventId %>&eventName=<%= event.eventName %>" method="POST" class="form-container">
       <h1>Buy</h1> 
   
       <label for="numTickets"><b>Tickets :</b></label>
@@ -246,6 +246,7 @@
         type: 'POST',
         url: '/like',
         data: {
+          eventId: "<%= event.eventId %>",
           eventName: "<%= event.eventName %>",
           liked: isLiked
         },
@@ -270,6 +271,7 @@ $('#commentbtn').click(function() {
           type: 'POST',
           url: '/comment',
           data: {
+            eventId: "<%= event.eventId %>",
             eventName: "<%= event.eventName %>",
             comment: comment
           },

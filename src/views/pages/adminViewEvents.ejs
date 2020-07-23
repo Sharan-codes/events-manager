@@ -38,6 +38,7 @@
       <%if (records.length >0){ %>
       <% records.forEach(function(row){ %>
       <tr>
+        <td><%= row.eventId %></td>
         <td><%= row.eventName %></td>
         <td><%= row.bookStartTime %></td>
         <td><%= row.bookEndTime %></tdonload="myFunction()">
@@ -46,7 +47,7 @@
         <td><%= row.availableTickets %></td>
         <td><%= row.status %></td>
         <!-- <td><a href="/eventDetails?eventName=<%= row.eventName %>&bookStartTime=<%= row.bookStartTime %>&bookEndTime=<%= row.bookEndTime %>&ticketPrice=<%= row.ticketPrice %>&totalTickets=<%= row.totalTickets %>&availableTickets=<%= row.availableTickets %>&status=<%= row.status %>" > -->
-        <td><a href="/adminEventDetails?eventName=<%= row.eventName %>">
+        <td><a href="/adminEventDetails?eventId=<%= row.eventId %>&eventName=<%= row.eventName %>">
             <button class="btn btn-primary">VIEW</button></a></td>
       </tr>
       <% })}else{ %>
@@ -57,6 +58,7 @@
     </tbody>
     <tfoot>
       <tr>
+        <th>Event ID</th>
         <th>Event name</th>
         <th>Booking start time</th>
         <th>Booking end time</th>

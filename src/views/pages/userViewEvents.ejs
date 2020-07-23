@@ -56,7 +56,7 @@
         <td><%= row.ticketPrice %></td>
         <td><%= row.availableTickets %></td>
         <!-- <td><a href="/eventDetails?eventName=<%= row.eventName %>&bookStartTime=<%= row.bookStartTime %>&bookEndTime=<%= row.bookEndTime %>&ticketPrice=<%= row.ticketPrice %>&totalTickets=<%= row.totalTickets %>&availableTickets=<%= row.availableTickets %>&status=<%= row.status %>" > -->
-        <td><a href="/userEventDetails?eventName=<%= row.eventName %>">
+        <td><a href="/userEventDetails?eventId=<%= row.eventId %>&eventName=<%= row.eventName %>">
             <button class="btn btn-dark text-warning">VIEW</button></a></td>
       </tr>
       <% })}else{ %>

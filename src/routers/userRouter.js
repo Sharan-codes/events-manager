@@ -81,7 +81,7 @@ router.get('/', (req, res) => {
   if(req.session.user){  
     console.log(req.session.user); 
 
-    if (req.session.user.name === "admin") {
+    if (req.session.user.type === ADMIN) {
       return res.redirect('addEvent.html');
     } 
 
@@ -120,7 +120,7 @@ router.get('/userViewEvents', async (req, res) => {
 //To get the details of each event
 router.get('/userEventDetails', async (req, res) => {
 	try {
-    const event = await Event.findOne({eventName : req.query.eventName});
+    const event = await Event.findOne({eventId : req.query.eventId, eventName : req.query.eventName});
     if (!event) {
       return res.status(404).send("Event not found");
     }
@@ -128,6 +128,7 @@ router.get('/userEventDetails', async (req, res) => {
     //to check if the user has liked the event
     const user = req.session.user.name;
     let likeEvent = await Like.findOne({
+        eventId : req.query.eventId, 
         eventName : req.query.eventName,
         userName : user
     });
@@ -139,12 +140,14 @@ router.get('/userEventDetails', async (req, res) => {
 
     //count the total no. of likes for the event
     const totalLikes = await Like.countDocuments({
+      eventId : req.query.eventId, 
       eventName : req.query.eventName,
       liked : TRUE
     });
 
     //retrieve all the comments with user name for the event
     const comments = await Comment.find({
+      eventId : req.query.eventId, 
       eventName : req.query.eventName
     });
       
@@ -159,6 +162,7 @@ router.get('/userEventDetails', async (req, res) => {
 router.post('/buyTickets', async (req, res) => {
   try {
     const event = await Event.findOne({
+      eventId : req.query.eventId, 
       eventName : req.query.eventName,
       status : EVENT_ACTIVE
     });
@@ -166,13 +170,14 @@ router.post('/buyTickets', async (req, res) => {
       return res.status(404).send("Event not found");
     }
     if(req.body.numTickets > event.availableTickets) {
-      return res.redirect('/userEventDetails?eventName=' + req.query.eventName);
+      return res.redirect('/userEventDetails?eventId=' + req.query.eventId + '&eventName=' + req.query.eventName);
     }
     else{
 
       //update the number of available tickets for the event after booking
       let remTickets = event.availableTickets - req.body.numTickets;
       const eventone = await Event.findOneAndUpdate({
+        eventId : req.query.eventId, 
         eventName : req.query.eventName,
         status : EVENT_ACTIVE
       }, { availableTickets: remTickets});
@@ -180,7 +185,7 @@ router.post('/buyTickets', async (req, res) => {
       if (!eventone) {
         return res.status(404).send("Event not found");
       }
-    return res.redirect('/userEventDetails?eventName=' + eventone.eventName);
+    return res.redirect('/userEventDetails?eventId=' + eventone.eventId + '&eventName=' + eventone.eventName);
     }
   }
   catch (e) {
@@ -194,18 +199,20 @@ router.post('/like', async (req, res) => {
     const user = req.session.user.name;
 
     let likeEvent = await Like.findOneAndUpdate({
+        eventId : req.body.eventId, 
         eventName : req.body.eventName,
         userName : user
       }, { liked: req.body.liked});
 
     if (!likeEvent) {
-    let likeEvent = new Like({
-      eventName: req.body.eventName,
-      userName : user,
-      liked: req.body.liked
-    });
-    
-    await likeEvent.save(); 
+      let likeEvent = new Like({
+        eventId : req.body.eventId, 
+        eventName: req.body.eventName,
+        userName : user,
+        liked: req.body.liked
+      });
+      
+      await likeEvent.save(); 
   }
   // res.status(201).send(user.name+" registered");
   //console.log(likeEvent);
@@ -222,13 +229,14 @@ router.post('/comment', async (req, res) => {
   try {
     const user = req.session.user.name;
     let comment = new Comment({
+      eventId : req.body.eventId, 
       eventName: req.body.eventName,
       userName : user,
       comment: req.body.comment
     });
     
-    await comment.save(); 
-    return res.redirect('/userEventDetails?eventName=' + req.body.eventName); 
+    await comment.save();
+    return res.redirect('/userEventDetails?eventId=' + req.body.eventId + '&eventName=' + req.body.eventName); 
   }
   catch (e) {
     res.status(400).send(e);
