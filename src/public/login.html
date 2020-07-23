@@ -29,20 +29,20 @@ crossorigin="anonymous">
 					
 					
 			<h1> Login </h1> 
-							
-			<input class="box" type="text" name="name" id="name"
-			placeholder="Name" required /><br>
-							
-			<input class="box" type="password" name="password"
-			id="password" placeholder="Password " required/><br>
-						<br> 
-			<div class="row">			
-			<input style="margin-left: 8%; width:40%;" type="submit" id="submitDetails"
-			name="submitDetails" value="Submit" /> 
-			<a href="register.html"><input class="reg" id="register" type="button"
-			name="register" value="Register" /></a>
-			</div>	
-					
+			<form>				
+				<input class="box" type="text" name="name" id="name"
+				placeholder="Name" required /><br>
+								
+				<input class="box" type="password" name="password"
+				id="password" placeholder="Password " pattern=".{7,}" title="Password must be 7 characters or more" minlength="7" required/><br>
+							<br> 
+				<div class="row">			
+					<input style="margin-left: 8%; width:40%;" type="submit" id="submitDetails"
+					name="submitDetails" value="Submit" /> 
+					<a href="register.html"><input class="reg" id="register" type="button"
+					name="register" value="Register" /></a>
+				</div>	
+			</form>		
 		</div> 
 				
 	</div> 
@@ -50,28 +50,31 @@ crossorigin="anonymous">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script> 
     $('#submitDetails').click(function(event) {
-    
-        $.ajax({
-            global: false,
-            type: 'POST',
-            url: '/login',
-            data: {
-                name: $("#name").val(),
-                password: $("#password").val(),
-            },
-            success: function (result) {
-				window.location.href = result.redirect;
-                console.log(result);
-            },
-            error: function (request, status, error) {
-               if(request.responseText === "invalid password") {
-                    alert("Invalid password");
+		if(($("#name").val() !== '') && ( $("#password").val().length >= 7))
+        {
+            event.preventDefault();
+			$.ajax({
+				global: false,
+				type: 'POST',
+				url: '/login',
+				data: {
+					name: $("#name").val(),
+					password: $("#password").val(),
+				},
+				success: function (result) {
+					window.location.href = result.redirect;
+					console.log(result);
+				},
+				error: function (request, status, error) {
+				if(request.responseText === "invalid password") {
+						alert("Invalid password");
+					}
+					else if(request.responseText === "user not found") {
+						alert("User doesn't exist");
+					}
 				}
-				else if(request.responseText === "user not found") {
-                    alert("User doesn't exist");
-				}
-            }
-        });
+			});
+        }
     });
 </script>
 </body> 
