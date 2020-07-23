@@ -1,6 +1,15 @@
 const mongoose = require('mongoose');
 
 const Like = mongoose.model('Like', {
+    eventId: {
+        type: Number,
+        default: EVENT_ACTIVE,
+        validate(value) {
+          if (value < 0) {
+            throw new Error('eventId must be a positive number');
+            }
+          }
+    },
     eventName: {
         type: String,
         required: true,
