@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const Comment = mongoose.model('Comment', {
+const Comment = mongoose.model('Comment', new mongoose.Schema({
     eventId: {
         type: Number,
         default: EVENT_ACTIVE,
@@ -24,7 +24,10 @@ const Comment = mongoose.model('Comment', {
         required: true,
         trim: true
     }
-});
+}, {
+    timestamps: true
+})
+);
 
 module.exports = {
     Comment : Comment

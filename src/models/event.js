@@ -2,7 +2,7 @@ require('../constants');
 const mongoose = require('mongoose');
 const validator = require('validator');
 
-const Event = mongoose.model('Event', {
+const Event = mongoose.model('Event', new mongoose.Schema({
     eventId: {
       type: Number,
       default: EVENT_ACTIVE,
@@ -67,6 +67,9 @@ const Event = mongoose.model('Event', {
         }
       }
     }
+},{
+  timestamps: true
 })
+);
 
 module.exports = Event;

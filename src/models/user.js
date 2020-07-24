@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 
-const User = mongoose.model('User', {
+const User = mongoose.model('User', new mongoose.Schema({
     type: {
         type: Number,
         default: USER,
@@ -22,7 +22,10 @@ const User = mongoose.model('User', {
             }
         }
     }
-});
+}, {
+    timestamps: true
+})
+);
 
 module.exports = {
     User: User

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const Like = mongoose.model('Like', {
+const Like = mongoose.model('Like', new mongoose.Schema({
     eventId: {
         type: Number,
         default: EVENT_ACTIVE,
@@ -28,7 +28,10 @@ const Like = mongoose.model('Like', {
 			}
         }
     }
-});
+}, {
+    timestamps: true
+})
+);
 
 module.exports = {
     Like: Like
