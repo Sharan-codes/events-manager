@@ -40,6 +40,9 @@
                         <div class="input-group">
                             <input class="input--style-3" type="password" placeholder="Password" name="password" id="password" pattern=".{7,}" title="Password must be 7 characters or more" minlength="7" required>
                         </div>
+                        <div class="row" id="error" style="display: none;">
+                            <h5 id="errormessage" style="color: red; font-weight: 600">Error message</h5> 
+                        </div>
                         <div class="p-t-10">
                             <button id="registerbtn" class="btn btn--pill btn--green" type="submit">SUBMIT</button>
                             <a href="/"><button class="btn btn--pill btn--green" style="margin-left:3%;" type="button">LOGIN</button></a>
@@ -62,6 +65,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script> 
     $('#registerbtn').click(function(event) {
+        var x = document.getElementById("error");
+		x.style.display = "none";
         if(($("#name").val() !== '') && ( $("#password").val().length >= 7))
         {
             event.preventDefault();
@@ -78,8 +83,11 @@
                     console.log(result);
                 },
                 error: function (request, status, error) {
+                var y = document.getElementById("errormessage");
                 if(request.responseText === "changename") {
-                        alert("Username already exists. Enter another name.");
+                        y.innerHTML = "Username already exists. Enter another name.";
+						x.style.display = "block";
+                        //alert("Username already exists. Enter another name.");
                     }
                 }
             });
