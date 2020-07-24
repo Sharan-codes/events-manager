@@ -35,13 +35,15 @@ crossorigin="anonymous">
 								
 				<input class="box" type="password" name="password"
 				id="password" placeholder="Password " pattern=".{7,}" title="Password must be 7 characters or more" minlength="7" required/><br>
-							<br> 
+				<div class="row" id="error" style="display: none;">
+					<h5 id="errormessage" style="color: red; margin-left: 6%; font-weight: 600">Error message</h5> 
+				</div>
 				<div class="row">			
 					<input style="margin-left: 8%; width:40%;" type="submit" id="submitDetails"
 					name="submitDetails" value="Submit" /> 
 					<a href="register.html"><input class="reg" id="register" type="button"
 					name="register" value="Register" /></a>
-				</div>	
+				</div>				
 			</form>		
 		</div> 
 				
@@ -50,6 +52,8 @@ crossorigin="anonymous">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script> 
     $('#submitDetails').click(function(event) {
+		var x = document.getElementById("error");
+		x.style.display = "none";
 		if(($("#name").val() !== '') && ( $("#password").val().length >= 7))
         {
             event.preventDefault();
@@ -66,11 +70,16 @@ crossorigin="anonymous">
 					console.log(result);
 				},
 				error: function (request, status, error) {
-				if(request.responseText === "invalid password") {
-						alert("Invalid password");
+					var y = document.getElementById("errormessage");
+					if(request.responseText === "invalid password") {
+						y.innerHTML = "Invalid password";
+						x.style.display = "block";
+						//alert("Invalid password");
 					}
 					else if(request.responseText === "user not found") {
-						alert("User doesn't exist");
+						y.innerHTML = "User doesn't exist";
+						x.style.display = "block";
+						//alert("User doesn't exist");
 					}
 				}
 			});
