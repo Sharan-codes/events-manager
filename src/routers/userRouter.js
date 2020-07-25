@@ -151,7 +151,7 @@ router.get('/userEventDetails', async (req, res) => {
       eventName : req.query.eventName
     });
       
-    res.render('pages/userEventDetails', { title: 'Event details', event : event, totalLikes : totalLikes, isLiked : isLiked, records: comments });
+    res.render('pages/userEventDetails', { title: 'Event details', event : event, user : user, totalLikes : totalLikes, isLiked : isLiked, records: comments });
 		// res.send(events);
 	} catch (e) {
 		res.status(500).send();
