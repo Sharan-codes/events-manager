@@ -44,7 +44,10 @@ router.post('/register', async (req, res) => {
     if (user) {
         console.log("changename");
       	return res.status(400).send("changename");
-      }
+    }
+
+    //count of total no. of user
+    const idCount = await User.countDocuments({});
 
     //for a new user name, register the user
     user = new User({
@@ -52,9 +55,12 @@ router.post('/register', async (req, res) => {
       name: req.body.name,
       password: req.body.password
     });
+
+    //initialise userId
+    user.userId = idCount + 1,
     
     await user.save();
-    return res.status(201).send(user.name+" registered");
+    return res.status(201).send(user.name+" registered with userId "+user.userId);
     //return res.redirect('register_success.html'); 
   }
   catch (e) {
@@ -102,7 +108,7 @@ router.get('/page', (req, res) => {
 router.get('/userViewEvents', async (req, res) => {
 	try {
     const dateTimeNow = new Date();
-    console.log(dateTimeNow)
+    console.log(dateTimeNow);
 
     //search for the events with bookings still open
     const events = await Event.find({
@@ -126,11 +132,12 @@ router.get('/userEventDetails', async (req, res) => {
     }
 
     //to check if the user has liked the event
-    const user = req.session.user.name;
+    const user = req.session.user;
     let likeEvent = await Like.findOne({
         eventId : req.query.eventId, 
         eventName : req.query.eventName,
-        userName : user
+        userId : user.userId, 
+        userName : user.name
     });
 
     let isLiked = FALSE;
@@ -151,7 +158,7 @@ router.get('/userEventDetails', async (req, res) => {
       eventName : req.query.eventName
     });
       
-    res.render('pages/userEventDetails', { title: 'Event details', event : event, user : user, totalLikes : totalLikes, isLiked : isLiked, records: comments });
+    res.render('pages/userEventDetails', { title: 'Event details', event : event, user : user.name, totalLikes : totalLikes, isLiked : isLiked, records: comments });
 		// res.send(events);
 	} catch (e) {
 		res.status(500).send();
@@ -196,28 +203,36 @@ router.post('/buyTickets', async (req, res) => {
 //To update the like status for an event
 router.post('/like', async (req, res) => {
   try {
-    const user = req.session.user.name;
+    const user = req.session.user;
 
     let likeEvent = await Like.findOneAndUpdate({
         eventId : req.body.eventId, 
         eventName : req.body.eventName,
-        userName : user
-      }, { liked: req.body.liked});
+        userId : user.userId, 
+        userName : user.name
+    }, { liked: req.body.liked });
 
     if (!likeEvent) {
       let likeEvent = new Like({
         eventId : req.body.eventId, 
         eventName: req.body.eventName,
-        userName : user,
+        userId : user.userId, 
+        userName : user.name,
         liked: req.body.liked
       });
+
+      //count of total no. of likes
+      const idCount = await Like.countDocuments({});
+
+      //initialise likeId
+      likeEvent.likeId = idCount + 1,
       
       await likeEvent.save(); 
-  }
+    }
   // res.status(201).send(user.name+" registered");
   //console.log(likeEvent);
   res.send("Liked");
- // res.redirect('/userEventDetails?eventName=' + req.body.eventName); 
+  // res.redirect('/userEventDetails?eventName=' + req.body.eventName); 
 }
   catch (e) {
     res.status(400).send(e);
@@ -227,13 +242,20 @@ router.post('/like', async (req, res) => {
 //To add the user comment for an event
 router.post('/comment', async (req, res) => {
   try {
-    const user = req.session.user.name;
+    const user = req.session.user;
     let comment = new Comment({
       eventId : req.body.eventId, 
       eventName: req.body.eventName,
-      userName : user,
+      userId : user.userId, 
+      userName : user.name,
       comment: req.body.comment
     });
+    
+    //count of total no. of comments
+    const idCount = await Comment.countDocuments({});
+
+    //initialise commentId
+    comment.commentId = idCount + 1, 
     
     await comment.save();
     return res.redirect('/userEventDetails?eventId=' + req.body.eventId + '&eventName=' + req.body.eventName); 
