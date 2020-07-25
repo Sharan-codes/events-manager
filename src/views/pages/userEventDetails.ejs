@@ -161,11 +161,16 @@
     </form>
 </div>
 <div class="col-md-12 mt-3">
+  <form>
   <div class="input-group">
     <h3 class="mt-2 ml-1">COMMENT</h3>
-      <textarea rows = "2" cols = "90" class="input--style-5 ml-2" type="text" id="comment" required></textarea>
-      <button class="btn btn-dark ml-4" id="commentbtn">></button>
+    <textarea rows = "2" cols = "90" class="input--style-5 ml-2" type="text" id="comment" required></textarea>
+    <button class="btn btn-dark ml-4" type="submit" id="commentbtn">></button>
   </div>
+  <div class="row" id="success" style="display: none;">
+    <p id="submitMessage" style="color: green; margin-left: 16%;">message</p> 
+  </div>
+  </form>
 </div>
 
 <table id="dtVerticalScrollExample" class="table table-striped table-bordered mt-5" cellspacing="0" width="100%">
@@ -260,12 +265,12 @@
 });
 
 $('#commentbtn').click(function() {
-    var comment = document.getElementById("comment").value;
-    if(comment === '') {
-      alert("Type a comment.");
-    }
-    else {
-    
+    var x = document.getElementById("success");
+		x.style.display = "none";
+    var comment = document.getElementById("comment");
+    if(comment.value !== '') {
+      event.preventDefault();
+
       $.ajax({
           global: false,
           type: 'POST',
@@ -273,10 +278,22 @@ $('#commentbtn').click(function() {
           data: {
             eventId: "<%= event.eventId %>",
             eventName: "<%= event.eventName %>",
-            comment: comment
+            comment: comment.value
           },
           success: function (result) {
-              alert("Comment submitted");
+              var y = document.getElementById("submitMessage");
+              y.innerHTML = "Comment submitted";
+						  x.style.display = "block";
+
+              var table = document.getElementById("dtVerticalScrollExample");
+              var row = table.insertRow(1);
+              var cell1 = row.insertCell(0);
+              var cell2 = row.insertCell(1);
+              cell1.innerHTML = "NEW CELL1";
+              cell1.className = "h4";
+              cell2.innerHTML = comment.value;
+              comment.value = '';
+              //alert("Comment submitted");
               console.log(result);
           },
           error: function (request, status, error) {
