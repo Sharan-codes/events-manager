@@ -7,6 +7,15 @@ const User = mongoose.model('User', new mongoose.Schema({
         default: USER,
         trim: true
     },
+    userId: {
+        type: Number,
+        default: TRUE,
+        validate(value) {
+          if (value < 0) {
+            throw new Error('userId must be a positive number');
+          }
+        }
+    },
     name: {
         type: String,
         trim: true

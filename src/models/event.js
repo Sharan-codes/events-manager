@@ -5,13 +5,14 @@ const validator = require('validator');
 const Event = mongoose.model('Event', new mongoose.Schema({
     eventId: {
       type: Number,
-      default: EVENT_ACTIVE,
+      default: TRUE,
       validate(value) {
         if (value < 0) {
           throw new Error('eventId must be a positive number');
           }
         }
-    },eventName: {
+    },
+    eventName: {
         type: String,
         required: true,
         trim: true
