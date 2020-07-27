@@ -27,6 +27,7 @@
     </div>
     <div class="col-md-6">
       <a href="/logout"><button class="btn btn-outline-dark float-right">Logout</button></a>
+      <a href="/userViewEvents"><button class="btn btn-outline-dark float-right">Events</button></a>
     </div>
     </div>
 <div class="col-md-12 mt-3 bg-dark pb-2">
@@ -52,7 +53,7 @@
     <h5 class="text-light">Total tickets : <%= event.totalTickets %></h5>
 </div>
 <div class="col-md-3 float-left offset-1 mt-2">
-  <h5 class="text-light"><%= event.availableTickets %> tickets left!!! </h5 >
+  <h5 class="text-light"><span id="ticketsLeft"><%= event.availableTickets %></span> tickets left!!! </h5 >
 </div>
 
 </div>
@@ -67,13 +68,16 @@
 </div>
 
 <div class="form-popup" id="buyForm">
-    <form action="/buyTickets?eventId=<%= event.eventId %>&eventName=<%= event.eventName %>" method="POST" class="form-container">
+    <form class="form-container">
       <h1>Buy</h1> 
   
       <label for="numTickets"><b>Tickets :</b></label>
-      <input id="ticketsNo" type="text" placeholder="Enter the no. of tickets" name="numTickets" required>
+      <input id="ticketsNo" type="number" placeholder="Enter the no. of tickets" name="numTickets" min="1" required>
      
-      <button type="submit" class="btn" onclick="ticketsUnavailable()">Buy</button>
+      <div class="row" id="error" style="display: none;">
+        <p id="errormessage" style="color: red; margin-left: 5%;">message</p> 
+      </div>
+      <button id="buy" type="submit" class="btn"">Buy</button>
       <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
     </form>
 </div>
@@ -121,19 +125,7 @@
     function closeForm() {
       document.getElementById("buyForm").style.display = "none";
     }
-    function ticketsUnavailable() {
-      var ticketsneeded = document.getElementById("ticketsNo").value;
-      if (ticketsneeded > <%= event.availableTickets %>)
-      {
-        alert("Only <%= event.availableTickets %> tickets left");
-      }else if(ticketsneeded=='')
-      {
-        alert("Enter a number");
-      }else
-      {
-        alert(ticketsneeded+" tickets bought");
-      }
-    }
+
     function loadLike() {
       var x = document.getElementById("likes");
       var y = document.getElementById("likesNum");
@@ -144,6 +136,49 @@
         x.style.color = 'gold';
       }
     }
+
+    $('#buy').click(function(event) {
+        var x = document.getElementById("error");
+		    x.style.display = "none";
+        if($("#ticketsNo").val() > 0)
+        {
+            event.preventDefault();
+            var y = document.getElementById("errormessage");
+            var cal = parseInt($("#ticketsLeft").text());
+            if($("#ticketsNo").val() > cal)
+            {
+              y.innerHTML = "Only " + cal + " tickets left";
+              x.style.display = "block";
+            }
+            else {
+              
+              $.ajax({
+                  global: false,
+                  type: 'POST',
+                  url: '/buyTickets?eventId=<%= event.eventId %>&eventName=<%= event.eventName %>',
+                  data: {
+                      numTickets: $("#ticketsNo").val(),
+                  },
+                  success: function (result) {
+                    var ticketsLeft = document.getElementById("ticketsLeft");
+                    var numLeft = result.availableTickets;
+                    ticketsLeft.innerHTML = numLeft;
+                    alert($("#ticketsNo").val() + " tickets bought.");
+                    console.log(result);
+                  },
+                  error: function (request, status, error) {
+                  if(request.responseText === "Event not found") {
+                          y.innerHTML = "Tickets can't be bought for this event";
+                          x.style.display = "block";
+                          //alert("Username already exists. Enter another name.");
+                      }
+                  }
+              });
+              
+            }
+        }
+    });
+
     $('#likes').click(function() {
       var x = document.getElementById("likes");
       var y = document.getElementById("likesNum");
