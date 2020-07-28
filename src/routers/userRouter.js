@@ -19,7 +19,7 @@ router.post('/login', async (req, res) => {
       console.log(req.session.user);
       
       if (user.type === ADMIN) {
-        return res.status(200).send({ redirect: 'addEvent.html' });
+        return res.status(200).send({ redirect: '/adminAddEvent' });
         // return res.redirect('addEvent.html');
       } 
       else {
@@ -88,7 +88,7 @@ router.get('/', (req, res) => {
     console.log(req.session.user); 
 
     if (req.session.user.type === ADMIN) {
-      return res.redirect('addEvent.html');
+      return res.redirect('/adminAddEvent');
     } 
 
     return res.redirect('/userViewEvents');

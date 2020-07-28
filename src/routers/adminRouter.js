@@ -40,6 +40,16 @@ router.post('/addEvent', async (req, res) => {
     res.status(400).send(e);
   }
 });
+
+router.get('/adminAddEvent', (req, res) => {
+  //Return to login page on back button press if already logged out
+  res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+  if (!req.session.user ) {
+    return res.redirect('login.html');
+  } 
+  return res.render('pages/addEvent');
+});
+
 //To view the list of events
 router.get('/adminViewEvents', async (req, res) => {
 	try {
