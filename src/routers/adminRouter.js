@@ -43,6 +43,12 @@ router.post('/addEvent', async (req, res) => {
 //To view the list of events
 router.get('/adminViewEvents', async (req, res) => {
 	try {
+    //Return to login page on back button press if already logged out
+    res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+    if (!req.session.user ) {
+      return res.redirect('login.html');
+    }
+
     const events = await Event.find({});
     res.render('pages/adminViewEvents', { title: 'Events', records:events });
 		// res.send(events);
@@ -54,6 +60,12 @@ router.get('/adminViewEvents', async (req, res) => {
 //To view the details of an event
 router.get('/adminEventDetails', async (req, res) => {
 	try {
+    //Return to login page on back button press if already logged out
+    res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+    if (!req.session.user ) {
+      return res.redirect('login.html');
+    }
+
     const event = await Event.findOne({eventId : req.query.eventId, eventName : req.query.eventName});
     if (!event) {
       return res.status(404).send("Event not found");
