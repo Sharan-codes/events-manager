@@ -20,6 +20,7 @@ app.use(session({
 }));
 app.use(userRouter);
 app.use(adminRouter);
+
 app.set('views', __dirname+'\\src\\views');
 
 app.engine('html', require('ejs').renderFile);
