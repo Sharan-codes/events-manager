@@ -188,6 +188,11 @@ router.post('/buyTickets', async (req, res) => {
     if (!event) {
       return res.status(404).send("Event not found");
     }
+
+    if(req.body.numTickets > event.availableTickets) {
+      return res.status(400).send({ availableTickets: event.availableTickets });
+    }
+    else{
       //update the number of available tickets for the event after booking
       let remTickets = event.availableTickets - req.body.numTickets;
       const eventone = await Event.findOneAndUpdate({
@@ -202,7 +207,7 @@ router.post('/buyTickets', async (req, res) => {
 
       return res.status(200).send({ availableTickets: remTickets });
       //return res.redirect('/userEventDetails?eventId=' + eventone.eventId + '&eventName=' + eventone.eventName);
-    
+    }
   }
   catch (e) {
     res.status(500).send();
