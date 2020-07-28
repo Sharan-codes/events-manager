@@ -107,6 +107,12 @@ router.get('/page', (req, res) => {
 //To view the list of events
 router.get('/userViewEvents', async (req, res) => {
 	try {
+    //Return to login page on back button press if already logged out
+    res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+    if (!req.session.user) {
+      return res.redirect('login.html');
+    }
+
     const dateTimeNow = new Date();
     console.log(dateTimeNow);
 
@@ -126,6 +132,12 @@ router.get('/userViewEvents', async (req, res) => {
 //To get the details of each event
 router.get('/userEventDetails', async (req, res) => {
 	try {
+    //Return to login page on back button press if already logged out
+    res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+    if (!req.session.user ) {
+      return res.redirect('login.html');
+    }
+
     const event = await Event.findOne({eventId : req.query.eventId, eventName : req.query.eventName});
     if (!event) {
       return res.status(404).send("Event not found");
