@@ -123,6 +123,10 @@
     }
     
     function closeForm() {
+      var x = document.getElementById("error");
+      var y = document.getElementById("ticketsNo");
+      y.value = '';
+      x.style.display = "none";
       document.getElementById("buyForm").style.display = "none";
     }
 
@@ -138,45 +142,41 @@
     }
 
     $('#buy').click(function(event) {
-        var x = document.getElementById("error");
-		    x.style.display = "none";
-        if($("#ticketsNo").val() > 0)
-        {
-            event.preventDefault();
-            var y = document.getElementById("errormessage");
-            var cal = parseInt($("#ticketsLeft").text());
-            if($("#ticketsNo").val() > cal)
-            {
-              y.innerHTML = "Only " + cal + " tickets left";
+      var x = document.getElementById("error");
+		  x.style.display = "none";
+      if($("#ticketsNo").val() > 0)
+      {
+        event.preventDefault();
+        var y = document.getElementById("errormessage");
+              
+        $.ajax({
+          global: false,
+          type: 'POST',
+          url: '/buyTickets?eventId=<%= event.eventId %>&eventName=<%= event.eventName %>',
+          data: {
+              numTickets: $("#ticketsNo").val(),
+          },
+          success: function (result) {
+            var ticketsLeft = document.getElementById("ticketsLeft");
+            var numLeft = result.availableTickets;
+            ticketsLeft.innerHTML = numLeft;
+            alert($("#ticketsNo").val() + " tickets bought.");
+            closeForm();
+            console.log(result);
+          },
+          error: function (request, status, error) {
+            if(request.responseText === "Event not found") {
+              y.innerHTML = "Tickets can't be bought for this event";
               x.style.display = "block";
-            }
-            else {
-              
-              $.ajax({
-                  global: false,
-                  type: 'POST',
-                  url: '/buyTickets?eventId=<%= event.eventId %>&eventName=<%= event.eventName %>',
-                  data: {
-                      numTickets: $("#ticketsNo").val(),
-                  },
-                  success: function (result) {
-                    var ticketsLeft = document.getElementById("ticketsLeft");
-                    var numLeft = result.availableTickets;
-                    ticketsLeft.innerHTML = numLeft;
-                    alert($("#ticketsNo").val() + " tickets bought.");
-                    console.log(result);
-                  },
-                  error: function (request, status, error) {
-                  if(request.responseText === "Event not found") {
-                          y.innerHTML = "Tickets can't be bought for this event";
-                          x.style.display = "block";
-                          //alert("Username already exists. Enter another name.");
-                      }
-                  }
-              });
-              
-            }
-        }
+              //alert("Username already exists. Enter another name.");
+            } else if(request.responseJSON.availableTickets) {
+              y.innerHTML = "Only " + request.responseJSON.availableTickets + " tickets left";
+              x.style.display = "block";
+              //alert("Username already exists. Enter another name.");
+            } 
+          }     
+        });
+      }
     });
 
     $('#likes').click(function() {
