@@ -33,7 +33,7 @@ router.post('/addEvent', async (req, res) => {
     //initialise no. of available tickets by the total no. of tickets
     event.availableTickets = event.totalTickets;
     await event.save();
-    return res.status(201).send(event.eventName+" added");
+    return res.status(201).send({ message: event.eventName+" added", redirect: '/adminViewEvents' });
     // return res.redirect('register_success.html'); 
   }
   catch (e) {
