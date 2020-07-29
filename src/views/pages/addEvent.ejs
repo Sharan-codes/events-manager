@@ -198,8 +198,9 @@ $('#submitEvent').click(function(event) {
                     totalTickets: $("#totalTickets").val(),
                 },
                 success: function (result) {
-                    alert(result);
-                    console.log(result);
+                    alert(result.message);
+                    window.location.href = result.redirect;
+                    console.log(result.message);
                 },
                 error: function (request, status, error) {
                     console.log(error);
