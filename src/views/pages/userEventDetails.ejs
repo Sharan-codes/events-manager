@@ -183,13 +183,16 @@
       var x = document.getElementById("likes");
       var y = document.getElementById("likesNum");
       var numLikes = <%= totalLikes %>;
+      var z = numLikes;
       var isLiked = <%= isLiked %>;
-      var z = numLikes-isLiked;
+      if(isLiked === 1) {
+        z = numLikes-isLiked;
+      }
       if(x.style.color==='gold')
       {
         x.style.color = 'lightgrey';
         z = z;
-        isLiked = 0;
+        isLiked = 2;
         y.innerHTML = z;
       }
       else{

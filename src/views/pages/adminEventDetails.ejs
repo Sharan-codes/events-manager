@@ -112,7 +112,7 @@
 </div>
 <script>
     function checkDeletion() {
-      if(<%= event.status %>){
+      if(<%= event.status %> === 2){
           alert("Event <%= event.eventName %> deleted");
       } else {
         alert("Event <%= event.eventName %> already deleted");
