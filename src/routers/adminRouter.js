@@ -110,7 +110,6 @@ router.post('/removeEvent', async (req, res) => {
        status : EVENT_ACTIVE
     }, { status: EVENT_INACTIVE });
     if (!event) {
-      res.redirect('/adminViewEvents');
       console.log("Event not found");
       return res.status(404).send("Event not found");
     }
@@ -118,7 +117,7 @@ router.post('/removeEvent', async (req, res) => {
     console.log("removed event :");
     console.log(event);
 
-    res.redirect('/adminViewEvents');
+    return res.status(200).send("Event removed");
 			
   }
   catch (e) {
