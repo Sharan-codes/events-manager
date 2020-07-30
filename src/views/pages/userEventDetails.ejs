@@ -64,7 +64,7 @@
 
 <i class="fa like fa-thumbs-up fa-2x ml-5 float-left mt-2" id="likes"></i>
 <h3 class="float-left ml-2 text-warning mt-2" id="likesNum">N</h3>
-<button class="open-button offset-7" onclick="openForm()">BOOK NOW</button>
+<button id="openBuy" class="open-button offset-7" onclick="openForm()">BOOK NOW</button>
 </div>
 
 <div class="form-popup" id="buyForm">
@@ -139,6 +139,11 @@
       {
         x.style.color = 'gold';
       }
+      if(<%= event.availableTickets %> === 0)
+      {
+        document.getElementById("openBuy").innerHTML = "SOLD OUT";
+        document.getElementById("openBuy").disabled = true;
+      }
     }
 
     $('#buy').click(function(event) {
@@ -167,6 +172,10 @@
           error: function (request, status, error) {
             if(request.responseText === "Event not found") {
               y.innerHTML = "Tickets can't be bought for this event";
+              x.style.display = "block";
+              //alert("Username already exists. Enter another name.");
+            } else if(request.responseText === "Event sold out") {
+              y.innerHTML = "Event sold out. No tickets left.";
               x.style.display = "block";
               //alert("Username already exists. Enter another name.");
             } else if(request.responseJSON.availableTickets) {
