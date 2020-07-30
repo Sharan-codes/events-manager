@@ -43,7 +43,7 @@ const Event = mongoose.model('Event', new mongoose.Schema({
     },
     totalTickets: {
       type: Number,
-      default: 1,
+      default: TRUE,
       validate(value) {
         if (value < 0) {
           throw new Error('totalTickets must be a positive number');
@@ -52,7 +52,7 @@ const Event = mongoose.model('Event', new mongoose.Schema({
     },
     availableTickets: {
       type: Number,
-      default: 1,
+      default: TRUE,
       validate(value) {
         if (value < 0) {
           throw new Error('availableTicket must be a positive number');
@@ -63,8 +63,8 @@ const Event = mongoose.model('Event', new mongoose.Schema({
       type: Number,
       default: EVENT_ACTIVE,
       validate(value) {
-        if (value!==0 && value!==1) {
-          throw new Error('status must be 0 or 1');
+        if (value!==1 && value!==2) {
+          throw new Error('status must be 1 or 2');
         }
       }
     }
