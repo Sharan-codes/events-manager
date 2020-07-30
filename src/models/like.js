@@ -41,8 +41,8 @@ const Like = mongoose.model('Like', new mongoose.Schema({
 		type: Number,
 		default: FALSE,
 		validate(value) {
-			if (value!==0 && value!==1) {
-				throw new Error('liked must be 0 or 1');
+			if (value!==1 && value!==2) {
+				throw new Error('liked must be 1 or 2');
 			}
         }
     }
