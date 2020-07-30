@@ -209,7 +209,9 @@ router.post('/buyTickets', async (req, res) => {
       return res.status(404).send("Event not found");
     }
 
-    if(req.body.numTickets > event.availableTickets) {
+    if(event.availableTickets === 0) {
+      return res.status(400).send("Event sold out");
+    } else if(req.body.numTickets > event.availableTickets) {
       return res.status(400).send({ availableTickets: event.availableTickets });
     }
     else{
