@@ -55,9 +55,11 @@
         <td><%= row.bookEndTime %></tdonload="myFunction()">
         <td><%= row.ticketPrice %></td>
         <td><%= row.availableTickets %></td>
+        <% var bookStatus = ""; %>
+        <% if (row.availableTickets === 0){ bookStatus = " [SOLD OUT]"; }%>
         <!-- <td><a href="/eventDetails?eventName=<%= row.eventName %>&bookStartTime=<%= row.bookStartTime %>&bookEndTime=<%= row.bookEndTime %>&ticketPrice=<%= row.ticketPrice %>&totalTickets=<%= row.totalTickets %>&availableTickets=<%= row.availableTickets %>&status=<%= row.status %>" > -->
         <td><a href="/userEventDetails?eventId=<%= row.eventId %>&eventName=<%= row.eventName %>">
-            <button class="btn btn-dark text-warning">VIEW</button></a></td>
+            <button class="btn btn-dark text-warning">VIEW<span class="text-danger"><%= bookStatus %></span></button></a></td>
       </tr>
       <% })}else{ %>
         <tr>
