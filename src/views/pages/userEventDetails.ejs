@@ -57,14 +57,15 @@
 </div>
 
 </div>
-<div class="col-md-12  bg-dark mt-1 p-2 text-light">
+<div class="col-md-12  bg-dark mt-1 text-light" style="padding-bottom:6%">
   <div class="col-md-3">
-    <h3 class="float-left mt-2">Like</h3>
+    <h3 class="float-left mt-3">Like</h3>
   </div>
 
-<i class="fa like fa-thumbs-up fa-2x ml-5 float-left mt-2" id="likes"></i>
-<h3 class="float-left ml-2 text-warning mt-2" id="likesNum">N</h3>
-<button id="openBuy" class="open-button offset-7" onclick="openForm()">BOOK NOW</button>
+<i class="fa like fa-thumbs-up fa-2x ml-5 float-left mt-3" id="likes"></i>
+<h3 class="float-left ml-2 text-warning mt-3" id="likesNum">N</h3>
+<i class="fa like fa-users fa-2x ml-2 float-left mt-3" id="likedUsers"></i>
+<button id="openBuy" class="open-button float-right" style="margin-top:0.5%" onclick="openForm()">BOOK NOW</button>
 </div>
 
 <div class="form-popup" id="buyForm">
@@ -80,6 +81,12 @@
       <button id="buy" type="submit" class="btn"">Buy</button>
       <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
     </form>
+</div>
+<div class="form-popup" id="showLikedUser">
+  <form class="form-container">
+    <button id="buy" type="submit" class="btn"">Buy</button>
+    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+  </form>
 </div>
 <div class="col-md-12 mt-3">
   <form>
