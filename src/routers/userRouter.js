@@ -2,6 +2,7 @@ const Event = require('../models/event');
 const {User} = require('../models/user');
 const {Like} = require('../models/like');
 const {Comment} = require('../models/comment');
+const crypto = require('crypto');
 const express = require('express');
 const router = new express.Router();
 
@@ -12,7 +13,16 @@ router.post('/login', async (req, res) => {
 
     //if user name is present check the password
     if (user) {
-      if (user.password !== req.body.password) {
+
+      //Hashing password with SHA-512
+      //creating hash object 
+      const hash = crypto.createHash('sha512');
+      //passing the data to be hashed
+      const data = hash.update(req.body.password, 'utf-8');
+      //Creating the hash in the required format
+      const genHash= data.digest('hex');
+
+      if (user.password !== genHash) {
       	return res.status(400).send("invalid password");
       }
       req.session.user = user;
@@ -48,17 +58,27 @@ router.post('/register', async (req, res) => {
 
     //count of total no. of user
     const idCount = await User.countDocuments({});
+    
+    //Hashing password with SHA-512
+    //creating hash object 
+    const hash = crypto.createHash('sha512');
+    //passing the data to be hashed
+    const data = hash.update(req.body.password, 'utf-8');
+    //Creating the hash in the required format
+    const genHash= data.digest('hex');
+    //Printing the output on the console
+    console.log("hash : " + genHash);
 
     //for a new user name, register the user
     user = new User({
       type: USER,
       name: req.body.name,
-      password: req.body.password
+      password: genHash
     });
 
     //initialise userId
-    user.userId = idCount + 1,
-    
+    user.userId = idCount + 1;
+
     await user.save();
     return res.status(201).send(user.name+" registered with userId "+user.userId);
     //return res.redirect('register_success.html'); 
