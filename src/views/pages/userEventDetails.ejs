@@ -19,7 +19,7 @@
   <link rel="stylesheet" href="css/eventDetails.css" type="text/css">
   
 </head>
-<body onload="loadLike()" >
+<body onload="load()" >
     <div class="container">
   <div class="row mt-5">
     <div class="col-md-6">
@@ -64,7 +64,7 @@
 
 <i class="fa like fa-thumbs-up fa-2x ml-5 float-left mt-3" id="likes"></i>
 <h3 class="float-left ml-2 text-warning mt-3" id="likesNum">N</h3>
-<i class="fa like fa-users fa-2x ml-2 float-left mt-3" id="likedUsers"></i>
+<i class="fa like fa-users fa-2x ml-2 float-left mt-3" style="display: none;" id="likedUsers"></i>
 <button id="openBuy" class="open-button float-right" style="margin-top:0.5%" onclick="openForm()">BOOK NOW</button>
 </div>
 
@@ -137,7 +137,7 @@
       document.getElementById("buyForm").style.display = "none";
     }
 
-    function loadLike() {
+    function load() {
       var x = document.getElementById("likes");
       var y = document.getElementById("likesNum");
       y.innerHTML = <%= totalLikes %>;
@@ -151,6 +151,10 @@
         document.getElementById("openBuy").innerHTML = "SOLD OUT";
         document.getElementById("openBuy").disabled = true;
       }
+
+      var usersLiked = document.getElementById("likedUsers");
+      if((<%= totalLikes %> > 0))
+        usersLiked.style.display = "block";  
     }
 
     $('#buy').click(function(event) {
@@ -196,6 +200,7 @@
     });
 
     $('#likes').click(function() {
+      var usersLiked = document.getElementById("likedUsers");
       var x = document.getElementById("likes");
       var y = document.getElementById("likesNum");
       var numLikes = <%= totalLikes %>;
@@ -204,36 +209,40 @@
       if(isLiked === 1) {
         z = numLikes-isLiked;
       }
-      if(x.style.color==='gold')
+      if(x.style.color === 'gold')
       {
+        if(z === 0)
+          usersLiked.style.display = "none";
         x.style.color = 'lightgrey';
         z = z;
         isLiked = 2;
         y.innerHTML = z;
       }
       else{
+        if(z === 0)
+          usersLiked.style.display = "block";
         x.style.color = 'gold';
         z = z+1;
         isLiked = 1;
         y.innerHTML = z;
       }
-    $.ajax({
-        global: false,
-        type: 'POST',
-        url: '/like',
-        data: {
-          eventId: "<%= event.eventId %>",
-          eventName: "<%= event.eventName %>",
-          liked: isLiked
-        },
-        success: function (result) {
-            console.log(result);
-        },
-        error: function (request, status, error) {
-            serviceError();
-        }
+      $.ajax({
+          global: false,
+          type: 'POST',
+          url: '/like',
+          data: {
+            eventId: "<%= event.eventId %>",
+            eventName: "<%= event.eventName %>",
+            liked: isLiked
+          },
+          success: function (result) {
+              console.log(result);
+          },
+          error: function (request, status, error) {
+              serviceError();
+          }
+      });
     });
-});
 
 $('#commentbtn').click(function() {
     var x = document.getElementById("success");
