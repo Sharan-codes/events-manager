@@ -275,6 +275,27 @@ router.post('/like', async (req, res) => {
   }
 });
 
+//To get the users who have liked the event
+router.get('/likedUsers', async (req, res) => {
+  try {
+
+    let likes = await Like.find({
+        eventId : req.body.eventId, 
+        eventName : req.body.eventName,
+        liked: TRUE
+    });
+
+    if (!likes) {
+      return res.status(404).send("no likes");
+    }
+
+    return res.status(200).send({ likes: likes });
+  }
+  catch (e) {
+    res.status(400).send(e);
+  }
+});
+
 //To add the user comment for an event
 router.post('/comment', async (req, res) => {
   try {
