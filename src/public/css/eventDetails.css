@@ -68,6 +68,27 @@ background-color: red;
 opacity: 1;
 }
 
+.likeform-popup {
+display: none;
+position: fixed;
+bottom: 17%;
+left: 27%;
+border: 3px solid #f1f1f1;
+z-index: 9;
+}
+
+/* Add styles to the form container */
+.likeform-container {
+min-width: 150%;
+max-width: 300%;
+padding: 10px;
+background-color: yellow;
+}
+
+.likeform-container .cancel {
+    background-color: red;
+}
+
 .like:hover {color: gold;}
 
 .input--style-5 {
