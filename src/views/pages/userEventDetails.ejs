@@ -64,7 +64,7 @@
 
 <i class="fa like fa-thumbs-up fa-2x ml-5 float-left mt-3" id="likes"></i>
 <h3 class="float-left ml-2 text-warning mt-3" id="likesNum">N</h3>
-<i class="fa like fa-users fa-2x ml-2 float-left mt-3" style="display: none;" id="likedUsers"></i>
+<i onclick="openLikeForm()" class="fa like fa-users fa-2x ml-2 float-left mt-3" style="display: none;" id="likedUsers"></i>
 <button id="openBuy" class="open-button float-right" style="margin-top:0.5%" onclick="openForm()">BOOK NOW</button>
 </div>
 
@@ -82,10 +82,14 @@
       <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
     </form>
 </div>
-<div class="form-popup" id="showLikedUser">
-  <form class="form-container">
-    <button id="buy" type="submit" class="btn"">Buy</button>
-    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+<div class="likeform-popup" id="showLikedUser">
+  <form class="likeform-container">
+    <i class="float-right" onclick="closeLikeForm()">X</i>
+    <p>LIKED BY :</p>
+    <table id="usersTable" class="table-striped" cellspacing="0" width="100%">
+        <tbody>
+        </tbody>
+      </table>
   </form>
 </div>
 <div class="col-md-12 mt-3">
@@ -135,6 +139,14 @@
       y.value = '';
       x.style.display = "none";
       document.getElementById("buyForm").style.display = "none";
+    }
+
+    function openLikeForm() {
+      document.getElementById("showLikedUser").style.display = "block";
+    }
+
+    function closeLikeForm() {
+      document.getElementById("showLikedUser").style.display = "none";
     }
 
     function load() {
@@ -284,6 +296,31 @@ $('#commentbtn').click(function() {
           }
       });
     }
+});
+
+$('#likedUsers').click(function() {
+
+      $.ajax({
+          global: false,
+          type: 'GET',
+          url: '/likedUsers?eventId=<%= event.eventId %>&eventName=<%= event.eventName %>',
+          success: function (result) {
+            var x = document.getElementById("usersTable").rows.length;
+            var table = document.getElementById("usersTable");
+            if(!x) {
+            for(var i = 0; i < result.likes.length; i++) {
+              var row = table.insertRow(i);
+              var cell1 = row.insertCell(0);
+              cell1.innerHTML = result.likes[i].userName;
+             // $("#usersTable").append("<tr><td>"+result.likes[i].userName+"</td></tr>");
+            }
+          }
+            console.log(result);
+          },
+          error: function (request, status, error) {
+              serviceError();
+          }
+      });
 });
     </script>
 </body>
