@@ -279,9 +279,9 @@ router.post('/like', async (req, res) => {
 router.get('/likedUsers', async (req, res) => {
   try {
 
-    let likes = await Like.find({
-        eventId : req.body.eventId, 
-        eventName : req.body.eventName,
+    const likes = await Like.find({
+        eventId : req.query.eventId, 
+        eventName : req.query.eventName,
         liked: TRUE
     });
 
@@ -289,6 +289,7 @@ router.get('/likedUsers', async (req, res) => {
       return res.status(404).send("no likes");
     }
 
+    console.log(likes);
     return res.status(200).send({ likes: likes });
   }
   catch (e) {
