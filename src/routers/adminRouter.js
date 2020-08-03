@@ -1,7 +1,8 @@
+const Booking = require('../models/booking');
 const Event = require('../models/event');
 require('../constants');
-const {Like} = require('../models/like');
-const {Comment} = require('../models/comment');
+const Like = require('../models/like');
+const Comment = require('../models/comment');
 const express = require('express');
 const router = new express.Router();
 
@@ -96,6 +97,25 @@ router.get('/adminEventDetails', async (req, res) => {
     
     res.render('pages/adminEventDetails', { title: 'Event details', event : event, totalLikes : totalLikes, records: comments });
 		// res.send(events);
+	} catch (e) {
+		res.status(500).send();
+	}
+});
+
+//To view the booking details
+router.get('/adminViewBookings', async (req, res) => {
+	try {
+    //Return to login page on back button press if already logged out
+    res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+    if (!req.session.user ) {
+      return res.redirect('login.html');
+    }
+
+    const bookings = await Booking.find({
+      eventId : req.query.eventId, 
+      eventName : req.query.eventName
+    });
+    res.render('pages/adminViewBookings', { eventName : req.query.eventName, eventId : req.query.eventId, records : bookings });
 	} catch (e) {
 		res.status(500).send();
 	}
