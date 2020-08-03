@@ -69,6 +69,8 @@ opacity: 1;
 }
 
 .likeform-popup {
+min-width: 10%;
+max-width: 30%;
 display: none;
 position: fixed;
 bottom: 17%;
@@ -79,8 +81,6 @@ z-index: 9;
 
 /* Add styles to the form container */
 .likeform-container {
-min-width: 150%;
-max-width: 300%;
 padding: 10px;
 background-color: yellow;
 }
