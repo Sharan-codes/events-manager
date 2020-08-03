@@ -1,7 +1,8 @@
+const Booking = require('../models/booking');
 const Event = require('../models/event');
-const {User} = require('../models/user');
-const {Like} = require('../models/like');
-const {Comment} = require('../models/comment');
+const User = require('../models/user');
+const Like = require('../models/like');
+const Comment = require('../models/comment');
 const crypto = require('crypto');
 const express = require('express');
 const router = new express.Router();
@@ -226,6 +227,24 @@ router.post('/buyTickets', async (req, res) => {
       if (!eventone) {
         return res.status(404).send("Event not found");
       }
+      
+      //To save the booking details
+      const user = req.session.user;
+      let booking = new Booking({
+        eventId : req.query.eventId, 
+        eventName: req.query.eventName,
+        userId : user.userId, 
+        userName : user.name,
+        ticketsBooked: req.body.numTickets
+      });
+      
+      //count of total no. of bookings
+      const idCount = await Booking.countDocuments({});
+
+      //initialise bookingId
+      booking.bookingId = idCount + 1; 
+      
+      await booking.save();
 
       return res.status(200).send({ availableTickets: remTickets });
       //return res.redirect('/userEventDetails?eventId=' + eventone.eventId + '&eventName=' + eventone.eventName);
@@ -313,7 +332,7 @@ router.post('/comment', async (req, res) => {
     const idCount = await Comment.countDocuments({});
 
     //initialise commentId
-    comment.commentId = idCount + 1, 
+    comment.commentId = idCount + 1; 
     
     await comment.save();
     return res.redirect('/userEventDetails?eventId=' + req.body.eventId + '&eventName=' + req.body.eventName); 
