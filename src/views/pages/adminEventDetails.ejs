@@ -73,13 +73,24 @@
   </div>
 
   </div>
-  <div class="col-md-12  bg-dark mt-1 pb-5 text-light">
+  <div class="col-md-12  bg-dark mt-1 text-light" style="padding-bottom:6%">
       <div class="col-md-3">
-        <h3 class="float-left mt-2">Like</h3>
+        <h3 class="float-left mt-3">Like</h3>
       </div>
     
-    <i class="fa like fa-thumbs-up fa-2x ml-5 float-left mt-2" id="likes"></i>
-    <h3 class="float-left ml-2 text-warning mt-2" id="likesNum">N</h3>
+    <i class="fa like fa-thumbs-up fa-2x ml-5 float-left mt-3" id="likes"></i>
+    <h3 class="float-left ml-2 text-warning mt-3" id="likesNum">N</h3>
+    <i onclick="openLikeForm()" class="fa like fa-users fa-2x ml-2 float-left mt-3" style="display: none;" id="likedUsers"></i>
+  </div>
+  <div class="likeform-popup" id="showLikedUser">
+    <form class="likeform-container">
+      <i class="float-right" onclick="closeLikeForm()">X</i>
+      <p>LIKED BY :</p>
+      <table id="usersTable" class="table-striped" cellspacing="0" width="100%">
+          <tbody>
+          </tbody>
+        </table>
+    </form>
   </div>
   <div class="col-md-12 mt-3">
       <div class="input-group">
@@ -117,7 +128,20 @@
       var x = document.getElementById("likes");
       var y = document.getElementById("likesNum");
       y.innerHTML = <%= totalLikes %>;
+
+      var usersLiked = document.getElementById("likedUsers");
+      if((<%= totalLikes %> > 0))
+        usersLiked.style.display = "block";
     }
+    
+    function openLikeForm() {
+      document.getElementById("showLikedUser").style.display = "block";
+    }
+
+    function closeLikeForm() {
+      document.getElementById("showLikedUser").style.display = "none";
+    }
+
     $('#delete').click(function() {
       if(<%= event.status %> === 1) {
         alert("Event <%= event.eventName %> already deleted");
@@ -126,10 +150,6 @@
           global: false,
           type: 'POST',
           url: '/removeEvent?eventId=<%= event.eventId %>&eventName=<%= event.eventName %>',
-          data: {
-                    name: $("#name").val(),
-                    password: $("#password").val(),
-          },
           success: function (result) {
               alert("Event <%= event.eventName %> deleted");
               window.location= "/adminViewEvents";
@@ -143,6 +163,34 @@
         });
       }
       });
+      $('#likedUsers').click(function() {
+
+$.ajax({
+    global: false,
+    type: 'GET',
+    url: '/likedUsers?eventId=<%= event.eventId %>&eventName=<%= event.eventName %>',
+    success: function (result) {
+      var table = document.getElementById("usersTable");
+      var x = table.rows.length;
+      console.log(x);
+      if(x) {
+        for(var j = 0; j < x; j++) {
+          table.deleteRow(0);
+      }
+      }
+      for(var i = 0; i < result.likes.length; i++) {
+        var row = table.insertRow(i);
+        var cell1 = row.insertCell(0);
+        cell1.innerHTML = result.likes[i].userName;
+       // $("#usersTable").append("<tr><td>"+result.likes[i].userName+"</td></tr>");
+      }
+      console.log(result);
+    },
+    error: function (request, status, error) {
+        serviceError();
+    }
+});
+});
 </script>
 </body>
 </html>
