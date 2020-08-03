@@ -47,6 +47,4 @@ const Comment = mongoose.model('Comment', new mongoose.Schema({
 })
 );
 
-module.exports = {
-    Comment : Comment
-  };
+module.exports = Comment;

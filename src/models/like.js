@@ -51,6 +51,4 @@ const Like = mongoose.model('Like', new mongoose.Schema({
 })
 );
 
-module.exports = {
-    Like: Like
-};
+module.exports = Like;
