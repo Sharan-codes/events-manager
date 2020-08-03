@@ -54,6 +54,7 @@
         <th>Available tickets</th>
         <th>Status</th>
         <th></th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -71,10 +72,12 @@
         <!-- <td><a href="/eventDetails?eventName=<%= row.eventName %>&bookStartTime=<%= row.bookStartTime %>&bookEndTime=<%= row.bookEndTime %>&ticketPrice=<%= row.ticketPrice %>&totalTickets=<%= row.totalTickets %>&availableTickets=<%= row.availableTickets %>&status=<%= row.status %>" > -->
         <td><a href="/adminEventDetails?eventId=<%= row.eventId %>&eventName=<%= row.eventName %>">
             <button class="btn btn-primary">VIEW</button></a></td>
+        <td><a href="/adminViewBookings?eventId=<%= row.eventId %>&eventName=<%= row.eventName %>">
+          <button class="btn btn-primary">BOOKINGS</button></a></td>
       </tr>
       <% })}else{ %>
         <tr>
-            <td colspan="8">Bookings not open for any events now</td>   
+            <td colspan="9">No events added</td>   
           </tr>
         <% } %>
     </tbody>
