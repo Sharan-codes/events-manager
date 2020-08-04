@@ -18,7 +18,7 @@
   <!-- Your custom styles (optional) -->
   <link rel="stylesheet" href="css/eventDetails.css" type="text/css">
 </head>
-<body onload="loadLike()" >
+<body onload="load()" >
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
       <a class="navbar-brand" href="/adminAddEvent">Admin</a>
@@ -53,12 +53,12 @@
         <p class="text-light p-4"><%= event.description %></p>
     </div>
   </div>
-  <div class="col-md-12 bg-secondary p-3">
+  <div class="col-md-12 bg-secondary" style="padding-bottom:7%">
   <div class="col-md-6 bg-secondary float-left">
-    <h5 class="text-dark p-3">Booking start time : <%= event.bookStartTime %></h5>
+      <h5 class="text-dark p-4 mt-1">Booking start time : <span id="bookingStart" ><%= event.bookStartTime %></span></h5>
   </div>
-  <div class="col-md-6 bg-secondary offset-5">
-    <h5 class="text-dark p-3">Booking end time : <%= event.bookEndTime %></h5 >
+  <div class="col-md-6 bg-secondary float-right">
+    <h5 class="text-dark p-4 mt-1">Booking end time : <span id="bookingEnd" ><%= event.bookEndTime %></span></h5 >
   </div>
   </div>
   <div class="col-md-12  bg-dark p-1">
@@ -125,7 +125,14 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-    function loadLike() {
+    function load() {
+      var startTime = document.getElementById("bookingStart");
+      var endTime = document.getElementById("bookingEnd");
+      var startDate = new Date("<%= event.bookStartTime %>");
+      var endDate = new Date("<%= event.bookEndTime %>");
+      startTime.innerHTML = startDate.toDateString()+", "+startDate.toLocaleTimeString();
+      endTime.innerHTML = endDate.toDateString()+", "+endDate.toLocaleTimeString();
+
       var x = document.getElementById("likes");
       var y = document.getElementById("likesNum");
       y.innerHTML = <%= totalLikes %>;

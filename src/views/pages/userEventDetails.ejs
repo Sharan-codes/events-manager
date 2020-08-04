@@ -36,12 +36,12 @@
         <p class="text-light p-4"><%= event.description %></p>
     </div>
 </div>
-<div class="col-md-12 bg-secondary p-3">
+<div class="col-md-12 bg-secondary" style="padding-bottom:7%">
 <div class="col-md-6 bg-secondary float-left">
-    <h5 class="text-dark p-3">Booking start time : <%= event.bookStartTime %></h5>
+    <h5 class="text-dark p-4 mt-1">Booking start time : <span id="bookingStart" ><%= event.bookStartTime %></span></h5>
 </div>
-<div class="col-md-6 bg-secondary offset-5">
-    <h5 class="text-dark p-3">Booking end time : <%= event.bookEndTime %></h5 >
+<div class="col-md-6 bg-secondary float-right">
+    <h5 class="text-dark p-4 mt-1">Booking end time : <span id="bookingEnd" ><%= event.bookEndTime %></span></h5 >
 </div>
 </div>
 <div class="col-md-12  bg-dark pb-5">
@@ -150,6 +150,13 @@
     }
 
     function load() {
+      var startTime = document.getElementById("bookingStart");
+      var endTime = document.getElementById("bookingEnd");
+      var startDate = new Date("<%= event.bookStartTime %>");
+      var endDate = new Date("<%= event.bookEndTime %>");
+      startTime.innerHTML = startDate.toDateString()+", "+startDate.toLocaleTimeString();
+      endTime.innerHTML = endDate.toDateString()+", "+endDate.toLocaleTimeString();
+      
       var x = document.getElementById("likes");
       var y = document.getElementById("likesNum");
       y.innerHTML = <%= totalLikes %>;
